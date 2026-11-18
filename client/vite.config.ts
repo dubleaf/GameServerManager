@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { createRequire } from 'node:module'
@@ -8,14 +8,18 @@ const { resolveBuildVersion } = require('../scripts/resolve-build-version.js') a
   resolveBuildVersion: (options?: { cwd?: string; env?: NodeJS.ProcessEnv }) => string
 }
 
+// 配置文件在 .env 加载前执行，需手动读取
+const fileEnv = loadEnv(process.env.NODE_ENV || 'development', __dirname, 'VITE_')
+
 // 获取后端服务端口
 const getServerPort = () => {
-  return process.env.VITE_SERVER_PORT || process.env.SERVER_PORT || '3001'
+  return process.env.VITE_SERVER_PORT || fileEnv.VITE_SERVER_PORT || process.env.SERVER_PORT || '3001'
 }
 
 // 获取前端开发端口
 const getClientPort = () => {
-  return parseInt(process.env.VITE_CLIENT_PORT || process.env.CLIENT_PORT || '5173', 10)
+  const raw = process.env.VITE_CLIENT_PORT || fileEnv.VITE_CLIENT_PORT || process.env.CLIENT_PORT || '5173'
+  return parseInt(raw, 10)
 }
 
 const serverPort = getServerPort()

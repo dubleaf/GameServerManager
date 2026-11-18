@@ -5,6 +5,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+
+# 环境变量文件（示例文件保留）
+.env
+.env.*
+!.env.example
+
 panel/public/
 *.code-workspace
 .vscode
